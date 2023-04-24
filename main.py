@@ -20,8 +20,11 @@ app.config['WTF_CSRF_ENABLED'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 Bootstrap(app)
 db = SQLAlchemy(app)
+api_key = '0bfe7bcc76b7e9041b6493f5e89d3b10'
 
-
+API_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
+API_IMG_URL = 'https://image.tmdb.org/t/p/w500'
+SELECTED_MOVIE = 'https://api.themoviedb.org/3/movie'
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,7 +74,39 @@ def delete_movie():
 @app.route('/add',methods=['GET','POST'])
 def add_movie():
     adform= addForm()
+
+    if adform.validate_on_submit():
+        movie_title = adform.title.data
+        response = requests.get(API_SEARCH_URL,params={'api_key': api_key,'query':movie_title})
+        data = response.json()['results']
+        
+        return render_template('select.html',temp_data = data)
+    
+
     return render_template('add.html',temp_addform=adform)
+
+
+@app.route('/find')
+def find_movie():
+    movie_api_id = request.args.get('id')
+    if movie_api_id:
+        movie_api_url = f'{SELECTED_MOVIE}/{movie_api_id}'
+        response = requests.get(movie_api_url,params={'api_key': api_key})
+        data = response.json()
+        print(data)
+
+        new_movie=Movie(
+            title =data["title"],
+            year =data['release_date'].split("-")[0],
+            img_url=f"{API_IMG_URL}{data['poster_path']}",
+            description= data['overview'] 
+        )
+        db.session.add(new_movie)
+        db.session.commit()
+        return redirect(url_for('home'))
+        
+
+
 
         
 
