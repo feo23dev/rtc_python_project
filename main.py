@@ -43,8 +43,16 @@ class Movie(db.Model):
 
 @app.route("/")
 def home():
-    movie = Movie.query.all()
-    return render_template("index.html",temp_movie=movie)
+    #movie = Movie.query.all()
+    #movie list sorted by rating
+    all_movies_sorted = Movie.query.order_by(Movie.rating.desc()).all()
+    for indeks,movie in enumerate(all_movies_sorted):
+        movie.ranking = indeks+1
+
+    
+
+
+    return render_template("index.html",temp_movie=all_movies_sorted)
 
 @app.route('/edit', methods=['GET','POST'])
 def rate_movie():
