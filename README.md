@@ -1,4 +1,16 @@
-# rtc_python_project
+# A movie blog built with Flask,JS,Bootstrap and SQLAlchemy.
+# Features
+A simple blog where you can show your favorite movies
+
+You can add and remove movies.Reviews and ratings of the movies can be updated.
+
+
+# Installation
+  Clone the repository
+  
+  Install the required dependencies by running the following command:
+  
+  pip install -r requirements.txt
 
 # Dependencies
   async-generator==1.10
@@ -65,6 +77,12 @@
   wsproto==1.2.0
   WTForm==1.0
   WTForms==3.0.1
+  
+  
+ # API
+ 
+ We make our requests for movie data from https://developer.themoviedb.org/reference/search-movie
+ You can visit the link to see the structure of the request adn data you can expect to get back.
 
 
 
