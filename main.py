@@ -43,7 +43,6 @@ class Movie(db.Model):
 
 @app.route("/")
 def home():
-    #movie = Movie.query.all()
     #movie list sorted by rating
     all_movies_sorted = Movie.query.order_by(Movie.rating.desc()).all()
     for indeks,movie in enumerate(all_movies_sorted):
@@ -57,13 +56,14 @@ def home():
 @app.route('/edit', methods=['GET','POST'])
 def rate_movie():
     form = MovieForm()
+    #getting the id of the movie from the html
     movie_id = request.args.get('id')
     movie= db.session.get(Movie, movie_id)
     print(movie,'This is the movie user select')
             
 
     if form.validate_on_submit():
-        print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+        
         movie.rating = float(form.rating.data)
         movie.review= form.review.data
         db.session.commit()
@@ -113,15 +113,6 @@ def find_movie():
         db.session.commit()
         return redirect(url_for('rate_movie',id=new_movie.id))
         
-
-
-
-        
-
-
-
-
-
 
 
 newMovie = Movie(
